@@ -1,6 +1,4 @@
-
-# aggregates boston ruby blogs
-#
+# aggregates blogs
 
 require 'nokogiri'
 require 'feed_yamlizer'
@@ -9,22 +7,21 @@ require 'sequel'
 
 CONFIG = YAML::load_file("config.yml")
 DB = Sequel.connect CONFIG['database']
-opml_url = CONFIG['opml']
-
-opml = `curl -Ls "#{opml_url}"`
-feeds = Nokogiri::XML(opml).search('outline').map {|o| 
-  t = o[:text]
-  if DB[:blogs].first title: t
-    # nothing
-  else
-    DB[:blogs].insert title:t, feed_url:o[:xmlUrl], html_url:o[:htmlUrl]
-  end
-  o[:xmlUrl]
-}
+feeds = CONFIG['feeds']
 feeds.each {|f|
 
-  feedyml = `curl -Ls '#{f}' | feed2yaml`
+  cmd = "curl -Ls '#{f}' | feed2yaml"
+  puts cmd
+  feedyml = `#{cmd}`
   x = YAML::load feedyml
+
+  blog = x[:meta]
+  params = { html_url:blog[:link], title:blog[:title], feed_url:f }
+  if DB[:blogs].first(feed_url:params[:feed_url])
+    print '.'
+  else
+    DB[:blogs].insert params
+  end
   x[:items].each { |i| 
     html = i[:content][:html]
     content = if html 
@@ -44,7 +41,7 @@ feeds.each {|f|
       href: i[:link],
       title: i[:title],
       author: i[:author],
-      date: i[:pub_date],
+      date: i[:pub_date] || Time.now.localtime,
       summary: content
     }
     if DB[:blog_posts].first href: e[:href]

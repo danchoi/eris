@@ -47,7 +47,7 @@ twitter_fields = %w( id created_at user_screen_name user_description user_locati
 DB[:twitter_users].all.each { |user|
   screen_name = user[:name]
   return unless screen_name
-  url = "http://api.twitter.com/1/statuses/user_timeline.xml?screen_name=#{screen_name}&include_rts=true&count=20"
+  url = "http://api.twitter.com/1/statuses/user_timeline.xml?screen_name=#{screen_name}&include_rts=true&count=80"
   sleep 0.5
   xml = `curl -Ls '#{url}'`
   doc = Nokogiri::XML(xml)

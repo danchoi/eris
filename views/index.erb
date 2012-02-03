@@ -25,12 +25,12 @@
       <div class="row">
         <div class="span2 leftBar">
           <ul>
-            <% @hackers.each do |h| %>
+            <% @twitter_users.each do |h| %>
             <li>
               <a 
-                title="<%= h[:followers] %> followers | <%= h[:repos] %> repos"
+                title="<%= h[:followers_count] %> followers"
                 href="https://github.com/<%=h[:name]%>"><%=h[:name]%></a>
-              <span class="location"><%= h[:location].gsub(/[\s,].*$/, '') %></span>
+              <span class="location"><%= h[:location] %></span>
             </li>
           <% end %>
           </ul>
@@ -60,12 +60,12 @@
     <script>
       // Set up the "play" buttons for each runnable code example.
       $(function() {
-        Updates.reset(<%= @updates.to_json %>);
+        
         BlogPosts.reset(<%= @blog_posts.to_json %>);
         Tweets.reset(<%= @tweets.to_json %>);
 
         setInterval(function () {
-          Updates.fetch({add: true});
+       
           BlogPosts.fetch({add: true});
           Tweets.fetch({add: true});
         }, <%= poll_interval %>);

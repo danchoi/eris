@@ -48,26 +48,20 @@ class BostonRubyists < Sinatra::Base
   }
 
   get('/') {
-    @hackers = DB[:hackers].order(:followers.desc).to_a
-    @updates = DB[:updates].order(:date.desc).limit(110).map {|u| prep u}
+    @twitter_users = DB[:twitter_users].order(:followers_count.desc).to_a
     @tweets = DB[:tweets].order(:created_at.desc).limit(200).map {|t| prep_tweet t}
     @blogs = DB[:blogs].all
     @blog_posts = DB[:blog_posts].order(:date.desc).limit(90).map {|p| prep p}
     erb :index 
   }
 
-  get('/updates') {
-    ds = DB[:updates].order(:date.desc).filter("date > ?", params[:from_time])
-    @updates = ds.map {|u| prep u}
-    @updates.to_json
-  }
   get('/blog_posts') {
-    ds = DB[:blog_posts].order(:date.desc).filter("date > ?", params[:from_time])
+    ds = DB[:blog_posts].order(:inserted_at.desc).filter("date > ?", params[:from_time])
     @blog_posts = ds.map {|p| prep p}
     @blog_posts.to_json
   }
   get('/tweets') {
-    ds = DB[:tweets].order(:created_at.desc).filter("created_at > ?", params[:from_time])
+    ds = DB[:tweets].order(:inserted_at.desc).filter("created_at > ?", params[:from_time])
     @tweets = ds.map {|p| prep_tweet p}
     @tweets.to_json
   }
