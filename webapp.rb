@@ -58,7 +58,7 @@ class BostonRubyists < Sinatra::Base
     @blogs = DB[:blogs].all
 
     @blog_posts = DB[:blog_posts].
-      filter("length(coalesce(summary, '')) > MIN_CONTENT_LENGTH").
+      filter("length(coalesce(summary, '')) > #{MIN_CONTENT_LENGTH}").
       order(:date.desc).
       limit(90).map {|p| prep p}
     erb :index 
@@ -67,7 +67,7 @@ class BostonRubyists < Sinatra::Base
   get('/blog_posts') {
     @blog_posts = DB[:blog_posts].
       order(:inserted_at.desc).
-      filter("length(coalesce(summary, '')) > MIN_CONTENT_LENGTH and date > ?", params[:from_time]).
+      filter("length(coalesce(summary, '')) > #{MIN_CONTENT_LENGTH} and date > ?", params[:from_time]).
       map {|p| prep p}
     @blog_posts.to_json
   }
