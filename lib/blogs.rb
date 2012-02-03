@@ -2,11 +2,8 @@
 
 require 'nokogiri'
 require 'feed_yamlizer'
-require 'yaml'
-require 'sequel'
+require 'db'
 
-CONFIG = YAML::load_file("config.yml")
-DB = Sequel.connect CONFIG['database']
 feeds = CONFIG['feeds']
 feeds.each {|f|
 
@@ -29,6 +26,7 @@ feeds.each {|f|
       next
     end
     html = i[:content][:html]
+    n = nil 
     content = if html 
       n = Nokogiri::HTML(html).xpath('/')
       if n
@@ -44,17 +42,37 @@ feeds.each {|f|
     e = { 
       blog: x[:meta][:title],
       feed_url: f,
-      href: i[:link],
+      blog_post_href: i[:link],
       title: i[:title],
       author: i[:author],
       date: i[:pub_date],
       summary: content
     }
-    if DB[:blog_posts].first href: e[:href]
+    if DB[:blog_posts].first blog_post_href: e[:blog_post_href]
       $stderr.print '.'
     else
       puts "Inserting #{e[:blog]} => #{e[:title]}"
-      DB[:blog_posts].insert e
+      blog_post_id = DB[:blog_posts].insert e
+
+      # Insert images into DB 
+      # Save in file system and process with rake images
+      if n
+        n.search("img").select {|img| 
+          img[:height] != '1' &&
+          img[:width] != '1' &&
+          img[:alt] !~ /^Add to/ && 
+          !DB[:images].first(src:img[:src]) 
+        }.each {|img|
+          filename = img[:src][/[^\/?#]+.(jpg|jpeg|git|png)/i,0]
+          next unless filename
+          params = {
+            blog_post_id:blog_post_id,
+            src:img[:src],
+            filename:filename
+          }
+          DB[:images].insert params
+        }
+      end
     end
   }    
 }

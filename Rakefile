@@ -4,25 +4,15 @@ require 'yaml'
 
 $:.unshift 'lib'
 
-# There must be a dry-er way to do this:
-task :blogs do
-  puts "Started :blogs at #{Time.now}"
-  require 'blogs'
-  puts "Finished :blogs at #{Time.now}"
+def ttask name
+  task name do 
+    puts "Started #{name} at #{Time.now}"
+    require name.to_s
+    puts "Finished #{name} at #{Time.now}"
+  end
 end
-task :updates do
-  puts "Started :updates at #{Time.now}"
-  require 'updates'
-  puts "Finished :updates at #{Time.now}"
-end
-task :hackers do
-  puts "Started :hackers at #{Time.now}"
-  require 'hackers'
-  puts "Finished :hackers at #{Time.now}"
-end
-task :tweets do
-  puts "Started :tweets at #{Time.now}"
-  require 'tweets'
-  puts "Finished :tweets at #{Time.now}"
-end
+
+ttask :blogs
+ttask :tweets
+ttask :images
 

@@ -12,15 +12,32 @@ create table twitter_users (
   geo_enabled boolean
 );
 
+create table blogs (
+  blog_id serial primary key,
+  html_url varchar unique, 
+  title varchar,
+  feed_url varchar
+);
+
 create table blog_posts (
+  blog_post_id serial primary key,
+  blog_id integer references blogs,
   blog varchar,
   feed_url varchar, 
-  href varchar unique,
+  blog_post_href varchar unique,
   title varchar,
   author varchar,
   date timestamp,
   inserted_at timestamp default now(),
   summary text
+);
+
+create table images (
+  blog_post_id integer references blog_posts,
+  src varchar unique,
+  filename varchar,  -- save under dir named after the blog_id
+  width integer,
+  height integer
 );
 
 create table tweets (
@@ -36,12 +53,5 @@ create table tweets (
   retweet_count integer default 0
 );
 create index tweets_created_at_idx on tweets (inserted_at);
-
-create table blogs (
-  title varchar,
-  html_url varchar, 
-  feed_url varchar
-);
-
 
 

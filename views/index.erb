@@ -38,7 +38,7 @@
           <h3>blogs</h3>
           <ul class="blogs">
           <%@blogs.each do |blog|%>
-            <li><a href="<%=blog[:html_url]%>"><%=blog[:title]%></a></li>
+            <li><a href="<%=blog[:blog_html_url]%>"><%=blog[:title]%></a></li>
           <%end%>
           </ul>
 
@@ -88,7 +88,7 @@
       <div class="blogpost">
         <span class="date">{{ date_string }}</span>
         <h4>{{ blog }}</h4>
-        <h3><a href="{{href}}">{{ title }}</a></h3>
+        <h3><a href="{{blog_post_href}}">{{ title }}</a></h3>
         <p>{{ summary }}</p>
       </div>
     </script>
