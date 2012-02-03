@@ -30,7 +30,7 @@ feeds.each {|f|
     end
     html = i[:content][:html]
     content = if html 
-      n = Nokogiri::HTML(html).at('p')
+      n = Nokogiri::HTML(html).xpath('/')
       if n
         words = n.inner_text[0,355].split(/\s/)
         words[0..-2].join(' ') + '...' 
