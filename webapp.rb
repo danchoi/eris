@@ -20,6 +20,9 @@ class BostonRubyists < Sinatra::Base
         # strip Github dates because they are redundant
         p[:content] = p[:content].sub(/\w+ \d+, \d{4}/, '')
       end
+      if p.has_key?(:img)
+        p[:imgtag] = p[:img] ? %Q[<img class="blog-post-image" src="#{p[:img]}"/>] : nil
+      end
       p
     end
 

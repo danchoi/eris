@@ -29,6 +29,7 @@ create table blog_posts (
   author varchar,
   date timestamp,
   inserted_at timestamp default now(),
+  img varchar,
   summary text
 );
 
@@ -36,6 +37,7 @@ create table images (
   blog_post_id integer references blog_posts,
   src varchar unique,
   filename varchar,  -- save under dir named after the blog_id
+  inserted_at timestamp default now(),
   width integer,
   height integer
 );
