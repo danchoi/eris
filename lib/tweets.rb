@@ -29,31 +29,39 @@ sources.each {|source|
   # list
   %r{/twitter.com/#!/(?<owner>[\w-]+)/(?<list_slug>[\w-]+)/members} =~ source
 
-  # single user
-  %r{/twitter.com/#!/(?<owner>[\w-]+)$} =~ source
 
   url = if list_slug 
-    "https://api.twitter.com/1/lists/members.xml?owner_screen_name=#{owner}&slug=#{list_slug}"
+    "https://api.twitter.com/1/lists/members.xml?owner_screen_name=#{owner}&slug=#{list_slug}&skip_status=true"
   else
+    # single user
+    %r{/twitter.com/#!/(?<owner>[\w-]+)$} =~ source
     "https://api.twitter.com/1/users/lookup.xml?screen_name=#{owner}"
   end
 
-  cmd = "curl -Ls '#{url}'"
-  xml = `#{cmd}`
-
-  users = Nokogiri::XML(xml).search("user").each {|user|
-    params = user_fields.reduce({}) {|m, field|
-      m[field.to_sym] = user.at(field).inner_text
-      m
+  nc = true
+  while nc 
+    puts "Cursor: #{nc}"
+    target_url = (nc.respond_to?(:inner_text) && nc.inner_text =~ /\d+/) ? (url + "&cursor=#{nc.inner_text}") : url
+    cmd = "curl -Ls '#{target_url}'"
+    puts cmd
+    xml = `#{cmd}`
+    doc = Nokogiri::XML(xml)
+    users = doc.search("user").each {|user|
+      params = user_fields.reduce({}) {|m, field|
+        m[field.to_sym] = user.at(field).inner_text
+        m
+      }
+      if DB[:twitter_users].first id:params[:id]
+        DB[:twitter_users].filter(id:params[:id]).update params
+      else
+        puts "Inserting #{params[:name]}"
+        DB[:twitter_users].insert params
+      end
     }
-    if DB[:twitter_users].first id:params[:id]
-      DB[:twitter_users].filter(id:params[:id]).update params
-    else
-      puts "Inserting #{params[:name]}"
-      DB[:twitter_users].insert params
-    end
-  }
+    nc = doc.at('next_cursor')
+  end
 }
+puts "Finished adding users"
 
 # process each user
 
