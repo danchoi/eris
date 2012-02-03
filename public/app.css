@@ -7,7 +7,9 @@
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-img { width: 30px; float:left; margin-right: 10px; }
+.twitter-users img { 
+  width: 30px; float:left; margin-right: 10px; 
+}
 .date {
   float: right;
   font-size: smaller;
@@ -21,15 +23,6 @@ img { width: 30px; float:left; margin-right: 10px; }
 .blogs li {
   margin-top: 0.5em;
 }
-.update { 
-  clear: left;
-  border-top: 1px dotted #ECECEC;
-  padding-top: 0.4em;
-  padding-bottom: 0px;
-}
-  .update img {
-    margin-top:5px;
-  }
 
 .blogpost { 
   border-top: 1px dotted #ECECEC;
@@ -63,4 +56,10 @@ img { width: 30px; float:left; margin-right: 10px; }
 .tweet img {
   float: left;
   padding-top:5px;
+}
+.blogpost img {
+  float: right;
+  max-width: 150px;
+  margin-left: 4px;
+  margin-top: 4px;
 }
