@@ -54,7 +54,12 @@ class BostonRubyists < Sinatra::Base
     @twitter_users = DB[:twitter_users].order(:followers_count.desc).to_a
     @tweets = DB[:tweets].order(:created_at.desc).limit(200).map {|t| prep_tweet t}
     @blogs = DB[:blogs].all
-    @blog_posts = DB[:blog_posts].order(:date.desc).limit(90).map {|p| prep p}
+    @blog_posts = DB[:blog_posts].
+      filter("blog_post_id % 2 == 0").
+      order(:date.desc).limit(90).map {|p| prep p}
+    @blog_posts_col2 = DB[:blog_posts].
+      filter("blog_post_id % 2 == 1").
+      order(:date.desc).limit(90).map {|p| prep p}
     erb :index 
   }
 

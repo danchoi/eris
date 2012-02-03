@@ -41,7 +41,6 @@ $(function() {
     }
   });
 
-
   window.AppView = Backbone.View.extend({
     initialize: function() {
       BlogPosts.bind('add', this.addOneBlogPost, this);
@@ -55,7 +54,11 @@ $(function() {
 
     addOneBlogPost: function(x) {
       var blogpostView = new BlogPostView({model: x});
-      $("#blogposts").prepend(blogpostView.render().el);
+      if ((x.get('blog_post_id') % 2) == 0) {
+        $("#blogposts").prepend(blogpostView.render().el);
+      } else {
+        $("#blogposts-column-2").prepend(blogpostView.render().el);
+      }
     },
     addAllBlogPosts: function() { BlogPosts.each(this.addOneBlogPost); },
 
