@@ -1,22 +1,15 @@
 
-create table hackers (
-  name varchar primary key,
-  followers integer,
-  repos integer,
+create table twitter_users (
+  id bigint primary key,
+  name varchar,
   location varchar,
-  updated timestamp
+  description varchar,
+  profile_image_url varchar,
+  url varchar,
+  followers_count integer,
+  friends_count integer,
+  geo_enabled boolean
 );
-
-create table updates (
-  update_id varchar primary key,
-  author varchar,
-  date timestamp,
-  title varchar,
-  content text,
-  media varchar 
-);
-create index updates_date_idx on updates (date);
-
 
 create table blog_posts (
   blog varchar,
@@ -46,7 +39,7 @@ create index tweets_created_at_idx on tweets (created_at);
 
 create table blogs (
   title varchar,
-  html_url varchar; 
+  html_url varchar, 
   feed_url varchar
 );
 
