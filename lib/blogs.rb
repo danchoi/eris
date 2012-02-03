@@ -16,7 +16,7 @@ feeds.each {|f|
   x = YAML::load feedyml
 
   blog = x[:meta]
-  params = { html_url:blog[:link], title:blog[:title], feed_url:f }
+  params = { html_url:blog[:link], title:blog[:title].strip, feed_url:f }
   if DB[:blogs].first(feed_url:params[:feed_url])
     print '.'
   else
@@ -35,6 +35,7 @@ feeds.each {|f|
     if content
       content.force_encoding("UTF-8")
     end
+
     e = { 
       blog: x[:meta][:title],
       feed_url: f,
