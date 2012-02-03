@@ -5,7 +5,7 @@ twitter_list:
 - https://twitter.com/#!/Sooz/boston-rocks/members
 poll_interval: 10
 org: 
-  name: exploistboston.com
+  name: exploitboston.com
   href: http://exploitboston.com
 feeds: 
 - http://feeds.feedburner.com/exploitboston
