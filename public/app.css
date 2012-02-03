@@ -37,6 +37,11 @@
   .tweet p { 
     margin-bottom: 2px;
   }
+  .tweet img {
+    padding-top:5px;
+    margin-right: 10px;
+    width: 30px;
+  }
 .twitter-users li {
   clear:left; 
 }
