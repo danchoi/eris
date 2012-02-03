@@ -1,9 +1,11 @@
 database: postgres:///bostonmusic
 page_title: Boston Music Hub
-twitter_list: https://twitter.com/#!/Sooz/boston-rocks/members
+twitter_list: 
+- https://twitter.com/#!/Sooz
+- https://twitter.com/#!/Sooz/boston-rocks/members
 poll_interval: 10
 org: 
-  name: Boston Music Hub
+  name: exploistboston.com
   href: http://exploitboston.com
 feeds: 
 - http://feeds.feedburner.com/exploitboston

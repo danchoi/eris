@@ -8,13 +8,6 @@ DB = Sequel.connect config['database']
 
 # https://twitter.com/#!/Sooz/boston-rocks/members
 
-%r{/twitter.com/#!/(?<owner>[\w-]+)/(?<list_slug>[\w-]+)/members} =~ config['twitter_list']
-
-url = "https://api.twitter.com/1/lists/members.xml?owner_screen_name=#{owner}&slug=#{list_slug}"
-
-cmd = "curl -Ls '#{url}'"
-xml = `#{cmd}`
-
 user_fields = %w(
   id 
   name 
@@ -28,19 +21,41 @@ user_fields = %w(
   geo_enabled 
 )
 
-users = Nokogiri::XML(xml).search("user").each {|user|
-  params = user_fields.reduce({}) {|m, field|
-    m[field.to_sym] = user.at(field).inner_text
-    m
-  }
-  if DB[:twitter_users].first id:params[:id]
-    DB[:twitter_users].filter(id:params[:id]).update params
+# insert users into the database
+
+sources = config['twitter_list']
+sources.each {|source|
+
+  # list
+  %r{/twitter.com/#!/(?<owner>[\w-]+)/(?<list_slug>[\w-]+)/members} =~ source
+
+  # single user
+  %r{/twitter.com/#!/(?<owner>[\w-]+)$} =~ source
+
+  url = if list_slug 
+    "https://api.twitter.com/1/lists/members.xml?owner_screen_name=#{owner}&slug=#{list_slug}"
   else
-    puts "Inserting #{params[:name]}"
-    DB[:twitter_users].insert params
+    "https://api.twitter.com/1/users/lookup.xml?screen_name=#{owner}"
   end
+
+  cmd = "curl -Ls '#{url}'"
+  xml = `#{cmd}`
+
+  users = Nokogiri::XML(xml).search("user").each {|user|
+    params = user_fields.reduce({}) {|m, field|
+      m[field.to_sym] = user.at(field).inner_text
+      m
+    }
+    if DB[:twitter_users].first id:params[:id]
+      DB[:twitter_users].filter(id:params[:id]).update params
+    else
+      puts "Inserting #{params[:name]}"
+      DB[:twitter_users].insert params
+    end
+  }
 }
 
+# process each user
 
 twitter_fields = %w( id created_at user_screen_name user_description user_location user_followers_count text retweet_count 
   user_profile_image_url)
