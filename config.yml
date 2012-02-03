@@ -1,0 +1,19 @@
+database: postgres:///bostonmusic
+page_title: Boston Music Hub
+twitter_list: https://twitter.com/#!/Sooz/boston-rocks/members
+poll_interval: 10
+org: 
+  name: Boston Music Hub
+  href: http://exploitboston.com
+feeds: 
+- http://feeds.feedburner.com/exploitboston
+- http://bradleysalmanac.com/rss.xml 
+- http://feeds.feedburner.com/rslblog/Byey
+- http://sleepovershows.com/feed/rss
+- http://feeds.boston.com/boston/ae/music/blog/index
+- http://bostonbandcrush.org/feed/rss
+- http://feeds.feedburner.com/PHXonthedownload
+- http://pellytwins.blogspot.com/feeds/posts/default?alt=rss
+- http://playgroundboston.com/feed
+- http://slyke25.tumblr.com/rss
+- http://www.bandinbostonpodcast.com/feed/

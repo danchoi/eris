@@ -23,8 +23,6 @@ create table blog_posts (
   summary text
 );
 
-create index blog_posts_date_idx on updates (inserted_at);
-
 create table tweets (
   id bigint primary key,
   created_at timestamp,
