@@ -24,12 +24,13 @@
 
       <div class="row">
         <div class="span2 leftBar">
-          <ul>
+          <ul class="twitter-users">
             <% @twitter_users.each do |h| %>
             <li>
+              <img src="<%=h[:profile_image_url]%>"/>
               <a 
                 title="<%= h[:followers_count] %> followers"
-                href="https://github.com/<%=h[:name]%>"><%=h[:name]%></a>
+                href="https://twitter.com/<%=h[:screen_name]%>"><%=h[:screen_name]%></a>
               <span class="location"><%= h[:location] %></span>
             </li>
           <% end %>

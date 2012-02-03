@@ -18,6 +18,7 @@ xml = `#{cmd}`
 user_fields = %w(
   id 
   name 
+  screen_name
   location 
   description 
   profile_image_url 

@@ -2,6 +2,7 @@
 create table twitter_users (
   id bigint primary key,
   name varchar,
+  screen_name varchar,
   location varchar,
   description varchar,
   profile_image_url varchar,
