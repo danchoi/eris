@@ -9,6 +9,7 @@
 }
 .twitter-users img { 
   width: 30px; float:left; margin-right: 10px; 
+  margin-top:4px;
 }
 .date {
   float: right;
