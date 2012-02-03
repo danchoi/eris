@@ -23,6 +23,11 @@ feeds.each {|f|
     DB[:blogs].insert params
   end
   x[:items].each { |i| 
+    # Reject if no pub_date
+    unless i[:pub_date]
+      puts "No pub date! Rejecting"
+      next
+    end
     html = i[:content][:html]
     content = if html 
       n = Nokogiri::HTML(html).at('p')
@@ -42,7 +47,7 @@ feeds.each {|f|
       href: i[:link],
       title: i[:title],
       author: i[:author],
-      date: i[:pub_date] || Time.now.localtime,
+      date: i[:pub_date],
       summary: content
     }
     if DB[:blog_posts].first href: e[:href]
