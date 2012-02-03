@@ -21,7 +21,7 @@ class BostonRubyists < Sinatra::Base
         p[:content] = p[:content].sub(/\w+ \d+, \d{4}/, '')
       end
       if p.has_key?(:img)
-        p[:imgtag] = p[:img] ? %Q[<img class="blog-post-image" src="#{p[:img]}"/>] : nil
+        p[:imgtag] = p[:img] ? %Q[<a href="#{p[:blog_post_href]}"><img class="blog-post-image" src="#{p[:img]}"/></a>] : nil
       end
       p
     end
@@ -48,24 +48,26 @@ class BostonRubyists < Sinatra::Base
     def poll_interval
       CONFIG['poll_interval'] * 1000
     end
+
   }
 
   get('/') {
     @twitter_users = DB[:twitter_users].order(:followers_count.desc).to_a
     @tweets = DB[:tweets].order(:created_at.desc).limit(200).map {|t| prep_tweet t}
     @blogs = DB[:blogs].all
+
     @blog_posts = DB[:blog_posts].
-      filter("blog_post_id % 2 == 0").
-      order(:date.desc).limit(90).map {|p| prep p}
-    @blog_posts_col2 = DB[:blog_posts].
-      filter("blog_post_id % 2 == 1").
-      order(:date.desc).limit(90).map {|p| prep p}
+      filter("length(coalesce(summary, '')) > 20").
+      order(:date.desc).
+      limit(90).map {|p| prep p}
     erb :index 
   }
 
   get('/blog_posts') {
-    ds = DB[:blog_posts].order(:inserted_at.desc).filter("date > ?", params[:from_time])
-    @blog_posts = ds.map {|p| prep p}
+    @blog_posts = DB[:blog_posts].
+      order(:inserted_at.desc).
+      filter("length(coalesce(summary, '')) > 20 and date > ?", params[:from_time]).
+      map {|p| prep p}
     @blog_posts.to_json
   }
   get('/tweets') {

@@ -21,7 +21,7 @@ create table blogs (
 
 create table blog_posts (
   blog_post_id serial primary key,
-  blog_id integer references blogs,
+  blog_id integer references blogs on delete cascade,
   blog varchar,
   feed_url varchar, 
   blog_post_href varchar unique,
@@ -34,7 +34,7 @@ create table blog_posts (
 );
 
 create table images (
-  blog_post_id integer references blog_posts,
+  blog_post_id integer references blog_posts on delete cascade,
   src varchar unique,
   filename varchar,  -- save under dir named after the blog_id
   inserted_at timestamp default now(),
