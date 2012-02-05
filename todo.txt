@@ -1,0 +1,1 @@
++feature atom feed processor would cover alot of atom-compliant feeds like google groups
