@@ -3,3 +3,5 @@
 +next twitter oauth metered api calls
 +idea let users vote up things
 +idea find a callback api for twitter to avoid polling
++idea allow twitter member to vote up articles by linking to them in tweets -> built-in curation, may also weight diff by user
++bug fix inner_text spacing
