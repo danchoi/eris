@@ -1,3 +1,5 @@
 +feature atom feed processor would cover alot of atom-compliant feeds like google groups
 +bug dns
 +next twitter oauth metered api calls
++idea let users vote up things
++idea find a callback api for twitter to avoid polling
