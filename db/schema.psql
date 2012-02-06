@@ -1,0 +1,33 @@
+create table applications (
+  app_id serial primary key,
+  app_name varchar,
+  app_slug varchar,
+  twitter_service_app_id integer,
+  feeds_service_app_id integer,
+  created timestamp default now(),
+  updated timestamp
+);
+
+-- sync these with services asynchronously
+
+create table twitter_lists (
+  app_id integer references applications (app_id),
+  list_slug_varchar not null,
+  owner varchar not null
+);
+
+create table feed_subscriptions (
+  app_id integer references applications (app_id),
+  feed_xml_url varchar not null,
+  created timestamp default now()
+);
+
+create table page_headers (
+  app_id integer references applications (app_id),
+  html text
+);
+
+create table page_footers (
+  app_id integer references applications (app_id),
+  html text
+);
