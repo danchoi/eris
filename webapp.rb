@@ -5,9 +5,10 @@ require 'logger'
 require 'nokogiri'
 require 'yaml'
 require 'uri'
+require 'open-uri'
 
-CONFIG = YAML::load_file 'config.yml'
-DB = Sequel.connect CONFIG['database']
+CONFIG = YAML::load_file('config.yml')
+puts CONFIG.inspect
 
 class ErisWeb < Sinatra::Base
   set :static, true
@@ -27,6 +28,7 @@ class ErisWeb < Sinatra::Base
     end
 
     def prep_tweet t
+      puts t.inspect
       t[:user_screen_name]
       tweet_href = "<a href='http://twitter.com/#{t[:user_screen_name]}/status/#{t[:id]}'>#{t[:created_at].strftime("%b %d %I:%M %p")}</a>"
       t[:user_screen_name].gsub!(/.*/, '<a href="http://twitter.com/\0">\0</a>')
@@ -37,34 +39,40 @@ class ErisWeb < Sinatra::Base
       t
     end
 
-    def page_title
-      CONFIG['page_title']
+    def app_config(app)
+      CONFIG['apps'][app]
     end
 
-    def org
-      CONFIG['org']
+    def app_id(app)
+      app_config(app)['app_id']
     end
 
-    def poll_interval
-      CONFIG['poll_interval'] * 1000
+    def tweets
+      url = CONFIG['services']['twitter'] + "/application/#{@app_id}/tweets"
+      puts "Calling service: #{url}"
+      JSON.parse open(url).read
     end
 
+    def feed_items
+      url = CONFIG['services']['feeds'] + "/application/#{@app_id}/items"
+      puts "Calling service: #{url}"
+      JSON.parse open(url).read
+    end
   }
 
   MIN_CONTENT_LENGTH = 100
+  get('/') {
+    CONFIG.to_yaml
+  }
   get('/:app') {|app|
-    @twitter_users = DB[:twitter_users].order(:followers_count.desc).to_a
-    @tweets = DB[:tweets].order(:created_at.desc).limit(200).map {|t| prep_tweet t}
-    @blogs = DB[:blogs].all
-
-    @blog_posts = DB[:blog_posts].
-      filter("length(coalesce(summary, '')) > #{MIN_CONTENT_LENGTH}").
-      order(:date.desc).
-      limit(90).map {|p| prep p}
+    @app_id = app_id(app)
+    @tweets = tweets.map {|t| prep_tweet t}
+    @feed_items = feed_items.map {|t| prep t}
     erb :index 
   }
 
   get('/:app/feed_items') {|app|
+    next "OK"
     @blog_posts = DB[:blog_posts].
       order(:inserted_at.desc).
       filter("length(coalesce(summary, '')) > #{MIN_CONTENT_LENGTH} and date > ?", params[:from_time]).
@@ -72,6 +80,7 @@ class ErisWeb < Sinatra::Base
     @blog_posts.to_json
   }
   get('/:app/tweets') {|app|
+    next "OK"
     ds = DB[:tweets].order(:inserted_at.desc).filter("created_at > ?", params[:from_time])
     @tweets = ds.map {|p| prep_tweet p}
     @tweets.to_json
