@@ -48,6 +48,7 @@ class ErisWeb < Sinatra::Base
         ("?" + URI.escape(params.select {|k,v| v != 'undefined'}.map {|k,v| "#{k}=#{URI.escape v}"}.join("&")))
       url = tweet_service_url + query
       res = JSON.parse open(url).read
+      res.uniq
       res
     end
 
