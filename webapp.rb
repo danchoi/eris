@@ -14,7 +14,8 @@ class ErisWeb < Sinatra::Base
   set :root, File.dirname(__FILE__)
 
   helpers {
-    def prep(p)
+    def prep_feed_item(p)
+      puts p.inspect
       p['date_string'] = DateTime.parse(p['date']).strftime("%b %d %I:%M %p")
       if p['image_file']
         p['imgtag'] = %Q[<a href="#{p['item_href']}"><img class="feed-item-image" src="#{p['image_file']}"/></a>] 
@@ -41,20 +42,25 @@ class ErisWeb < Sinatra::Base
     end
 
     def tweets(params={})
-      return [] if params.detect {|k,v| v == 'undefined'}
       query = params.empty? ? "" : 
         ("?" + URI.escape(params.select {|k,v| v != 'undefined'}.map {|k,v| "#{k}=#{URI.escape v}"}.join("&")))
       url = tweet_service_url + query
       puts "Calling service: #{url}"
       res = JSON.parse open(url).read
-      puts res
       res
     end
 
-    def feed_items
+    def feeds_service_url
       url = CONFIG['services']['feeds'] + "/application/#{@app_id}/items"
+    end
+
+    def feed_items(params={})
+      query = params.empty? ? "" : 
+        ("?" + URI.escape(params.select {|k,v| v != 'undefined'}.map {|k,v| "#{k}=#{URI.escape v}"}.join("&")))
+      url = feeds_service_url + query
       puts "Calling service: #{url}"
-      JSON.parse open(url).read
+      res = JSON.parse open(url).read
+      res
     end
   }
 
@@ -67,23 +73,20 @@ class ErisWeb < Sinatra::Base
     @app = app
     @app_id = app_config['app_id']
     @tweets = tweets.map {|t| prep_tweet t}
-    @feed_items = feed_items.map {|t| prep t}
+    @feed_items = feed_items.map {|t| prep_feed_item t}
     erb :index 
   }
 
   get('/:app/tweets') {|app|
     @app = app
     @app_id = app_config['app_id']
-    tweets(from_time: params[:from_time])
+    resp = tweets(from_time: params[:from_time]).to_json
   }
 
   get('/:app/feed_items') {|app|
-    next "OK"
-    @blog_posts = DB[:blog_posts].
-      order(:inserted_at.desc).
-      filter("length(coalesce(summary, '')) > #{MIN_CONTENT_LENGTH} and date > ?", params[:from_time]).
-      map {|p| prep p}
-    @blog_posts.to_json
+    @app = app
+    @app_id = app_config['app_id']
+    resp = feed_items(from_time: params[:from_time]).to_json
   }
 
   run! if app_file == $0

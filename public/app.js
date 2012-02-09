@@ -4,9 +4,7 @@ $(function() {
 
   window.FeedItem = Backbone.Model.extend({ idAttribute: 'href' });
   window.FeedItemsList = Backbone.Collection.extend({
-    url: function() {
-      return ('/items?from_time=' + this.models[this.models.length-1].get("date"));
-    },
+    url: function() { return nil; },
     model: FeedItem,
     comparator: function(x) { return x.get('date'); }
   });

@@ -22,22 +22,15 @@
       </p>
 
       <div class="row">
-        <div class="span2 leftBar">
-          <ul class="twitter-users">
-          </ul>
-          <h3>blogs</h3>
-          <ul class="blogs">
-          </ul>
-        </div>
-        <div class="span2">
+        <div class="span4">
           <div id="tweets"> </div>
         </div>
 
         <div class="span4">
-          <div id="blogposts"> </div>
+          <div id="feedItems"> </div>
         </div>
         <div class="span4">
-          <div id="blogposts-column-2"> </div>
+          <div id="feedItems-column-2"> </div>
         </div>
       </div>
     </div>
@@ -49,10 +42,21 @@
 
     <script>
       $(function() {
-        // FeedItems.reset(<%= @feed_items.to_json %>);
+        FeedItems.reset(<%= @feed_items.to_json %>);
         Tweets.reset(<%= @tweets.to_json %>);
         Tweets.url = function() {
-          return ('/<%= @app %>/tweets?from_time=' + this.models[this.models.length-1].get("created_at"));
+          var lastItem = this.models[this.models.length-1];
+          console.log("number of models: " + this.models.length);
+          console.log("last tweet");
+          console.log(lastItem.attributes);
+          return ('/<%= @app %>/tweets?from_time=' + lastItem.get("created_at"));
+        };
+        FeedItems.url = function() {
+          var lastItem = this.models[this.models.length-1];
+          console.log("number of models: " + this.models.length);
+          console.log("last feed item");
+          console.log(lastItem.attributes);
+          return ('/<%= @app %>/feed_items?from_time=' + lastItem.get("created_at"));
         };
         setInterval(function () {
           // FeedItems.fetch({add: true});
@@ -72,7 +76,7 @@
     <script type="text/template" id="feed-item-template">
       <div class="feedItem">
         <span class="date">{{date_string}}</span>
-        <h4>{{ feed_title}}</h4>
+        <h4>{{feed_title}}</h4>
         <h3><a href="{{item_href}}">{{title}}</a></h3>
         {{image_file}}
         <p>{{ summary }}</p>
@@ -81,7 +85,7 @@
 
     <script type="text/template" id="tweet-template">
       <div class="tweet">
-        <img src=""/>
+        <img src="{{profile_image_url}}"/>
         <strong>{{ screen_name }}</strong>
         <p>
           {{ text }}
