@@ -10,7 +10,6 @@
   <body>
 
     <div class="container">
-
       <a id="bostonrblink" href="<%=org['href']%>"><%=org['name']%></a>
       <h1 class="titleheader"><%= page_title %></h1>
 
@@ -41,7 +40,6 @@
             <li><a href="<%=blog[:blog_html_url]%>"><%=blog[:title]%></a></li>
           <%end%>
           </ul>
-
         </div>
         <div class="span2">
           <div id="tweets"> </div>
@@ -54,7 +52,6 @@
           <div id="blogposts-column-2"> </div>
         </div>
       </div>
-
     </div>
   
     <script type="text/javascript" src="/underscore-min.js"></script>
@@ -63,23 +60,16 @@
     <script type="text/javascript" src="/app.js"></script>
 
     <script>
-      // Set up the "play" buttons for each runnable code example.
       $(function() {
-        
         FeedItems.reset(<%= @blog_posts.to_json %>);
         Tweets.reset(<%= @tweets.to_json %>);
-
         setInterval(function () {
-       
           FeedItems.fetch({add: true});
           Tweets.fetch({add: true});
         }, <%= poll_interval %>);
       });
     </script>
-
-
     <!-- Templates -->
-
     <script type="text/template" id="update-template">
       <div class="update">
           <span class="date">{{ date_string }}</span>
@@ -109,8 +99,6 @@
         </p>
       </div>
     </script>
-
   </body>
-
 </html>
 
