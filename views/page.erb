@@ -68,9 +68,11 @@
           return ('/<%= @app %>/feed_items?from_time=' + lastItem.get("created_at"));
         };
         setInterval(function () {
-          // FeedItems.fetch({add: true});
           Tweets.fetch({add: true});
         }, <%= app_config['poll_interval'] * 1000 %>);
+        setInterval(function () {
+          FeedItems.fetch({add: true});
+        }, <%= app_config['poll_interval'] * 1000 * 2 %>);
       });
     </script>
     <!-- Templates -->
