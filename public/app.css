@@ -1,7 +1,15 @@
 .container {
   margin-bottom: 50px;
-  height: 7800px;
+}
+#contentBox {
+  height: 4800px;
   overflow:hidden;
+}
+#footer {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dotted #DDD;
+  text-align: center;
 }
 .titleheader {
   margin-top: 0.5em;
@@ -24,8 +32,8 @@
 .feedItems li {
   margin-top: 0.5em;
 }
-
 .feedItem { 
+  clear: both;
   border-top: 1px dotted #ECECEC;
   padding-bottom: 0.3em;
   padding-top: 0.5em;

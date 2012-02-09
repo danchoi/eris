@@ -15,15 +15,7 @@
       <a id="bostonrblink" href="<%=app_config['org']['href']%>"><%= app_config['org']['name']%></a>
       <h1 class="titleheader"><%= app_config['page']['title'] %></h1>
 
-      <p>
-        This site is powered by <a href="www.sinatrarb.com/">Sinatra</a>
-        and 
-        <a href="http://documentcloud.github.com/backbone/">Backbone.js</a>.
-        It should update automatically in-place every few minutes.
-        Get the <a href="https://github.com/danchoi/boston-music-planet">source code</a> on GitHub.
-      </p>
-
-      <div class="row">
+      <div id="contentBox" class="row">
         <div class="span4">
           <div id="tweets"> </div>
         </div>
@@ -35,6 +27,17 @@
           <div id="feedItems-column-2"> </div>
         </div>
       </div>
+
+      <div id="footer" class="row">
+        <p>
+          This site is powered by <a href="www.sinatrarb.com/">Sinatra</a>
+          and 
+          <a href="http://documentcloud.github.com/backbone/">Backbone.js</a>.
+          It should update automatically in-place every few minutes.
+          Get the <a href="https://github.com/danchoi/boston-music-planet">source code</a> on GitHub.
+        </p>
+      </div>
+
     </div>
   
     <script type="text/javascript" src="/underscore-min.js"></script>
@@ -48,16 +51,20 @@
         Tweets.reset(<%= @tweets.to_json %>);
         Tweets.url = function() {
           var lastItem = this.models[this.models.length-1];
+          /*
           console.log("number of models: " + this.models.length);
           console.log("last tweet");
           console.log(lastItem.attributes);
+          */
           return ('/<%= @app %>/tweets?from_time=' + lastItem.get("created_at"));
         };
         FeedItems.url = function() {
           var lastItem = this.models[this.models.length-1];
+          /*
           console.log("number of models: " + this.models.length);
           console.log("last feed item");
           console.log(lastItem.attributes);
+          */
           return ('/<%= @app %>/feed_items?from_time=' + lastItem.get("created_at"));
         };
         setInterval(function () {
@@ -80,8 +87,8 @@
         <span class="date">{{date_string}}</span>
         <h4>{{feed_title}}</h4>
         <h3><a href="{{item_href}}">{{title}}</a></h3>
-        {{image_file}}
-        <p>{{ summary }}</p>
+        {{image_tag}}
+        <p>{{summary}}</p>
       </div>
     </script>
 

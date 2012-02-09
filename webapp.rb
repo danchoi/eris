@@ -15,10 +15,12 @@ class ErisWeb < Sinatra::Base
 
   helpers {
     def prep_feed_item(p)
-      puts p.inspect
       p['date_string'] = DateTime.parse(p['date']).strftime("%b %d %I:%M %p")
       if p['image_file']
-        p['imgtag'] = %Q[<a href="#{p['item_href']}"><img class="feed-item-image" src="#{p['image_file']}"/></a>] 
+        image_path = "/feed-images/#{p['item_id']}/#{p['image_file']}"
+        p['image_tag'] = %Q[<a href="#{p['item_href']}"><img class="feed-item-image" src="#{image_path}"/></a>] 
+      else
+        p['image_tag'] = ''
       end
       p
     end
@@ -45,7 +47,6 @@ class ErisWeb < Sinatra::Base
       query = params.empty? ? "" : 
         ("?" + URI.escape(params.select {|k,v| v != 'undefined'}.map {|k,v| "#{k}=#{URI.escape v}"}.join("&")))
       url = tweet_service_url + query
-      puts "Calling service: #{url}"
       res = JSON.parse open(url).read
       res
     end
@@ -58,8 +59,9 @@ class ErisWeb < Sinatra::Base
       query = params.empty? ? "" : 
         ("?" + URI.escape(params.select {|k,v| v != 'undefined'}.map {|k,v| "#{k}=#{URI.escape v}"}.join("&")))
       url = feeds_service_url + query
-      puts "Calling service: #{url}"
       res = JSON.parse open(url).read
+      # filter out items with little or no text content
+      res = res.select {|item| item['summary'].length > 200}
       res
     end
   }
@@ -80,13 +82,13 @@ class ErisWeb < Sinatra::Base
   get('/:app/tweets') {|app|
     @app = app
     @app_id = app_config['app_id']
-    resp = tweets(from_time: params[:from_time]).to_json
+    resp = tweets(from_time: params[:from_time]).map {|x| prep_tweet x}.to_json
   }
 
   get('/:app/feed_items') {|app|
     @app = app
     @app_id = app_config['app_id']
-    resp = feed_items(from_time: params[:from_time]).to_json
+    resp = feed_items(from_time: params[:from_time]).map {|x| prep_feed_item x}.to_json
   }
 
   run! if app_file == $0
