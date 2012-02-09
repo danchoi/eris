@@ -65,7 +65,7 @@
           console.log("last feed item");
           console.log(lastItem.attributes);
           */
-          return ('/<%= @app %>/feed_items?from_time=' + lastItem.get("created_at"));
+          return ('/<%= @app %>/feed_items?from_time=' + lastItem.get("date"));
         };
         setInterval(function () {
           Tweets.fetch({add: true});
