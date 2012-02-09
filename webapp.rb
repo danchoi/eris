@@ -9,6 +9,14 @@ require 'open-uri'
 
 CONFIG = YAML::load_file('config.yml')
 
+class Array
+  def uniq_by
+    hash, array = {}, []
+    each { |i| hash[yield(i)] ||= (array << i) }
+    array
+  end
+end
+
 class ErisWeb < Sinatra::Base
   set :static, true
   set :root, File.dirname(__FILE__)
@@ -47,8 +55,7 @@ class ErisWeb < Sinatra::Base
       query = params.empty? ? "" : 
         ("?" + URI.escape(params.select {|k,v| v != 'undefined'}.map {|k,v| "#{k}=#{URI.escape v}"}.join("&")))
       url = tweet_service_url + query
-      res = JSON.parse open(url).read
-      res.uniq
+      res = JSON.parse(open(url).read).uniq_by {|x| x['tweet_id']}
       res
     end
 

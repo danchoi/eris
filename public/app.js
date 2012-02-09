@@ -20,7 +20,7 @@ $(function() {
   });
 
 
-  window.Tweet = Backbone.Model.extend({ idAttribute: 'href' });
+  window.Tweet = Backbone.Model.extend({ idAttribute: 'tweet_id' });
   window.TweetsList = Backbone.Collection.extend({
     url: function() { return ; },
     model: Tweet,
