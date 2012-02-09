@@ -68,7 +68,7 @@ class ErisWeb < Sinatra::Base
 
   MIN_CONTENT_LENGTH = 100
   get('/') {
-    CONFIG.to_yaml
+    erb :home
   }
 
   get('/:app') {|app|
@@ -76,7 +76,7 @@ class ErisWeb < Sinatra::Base
     @app_id = app_config['app_id']
     @tweets = tweets.map {|t| prep_tweet t}
     @feed_items = feed_items.map {|t| prep_feed_item t}
-    erb :index 
+    erb :page
   }
 
   get('/:app/tweets') {|app|

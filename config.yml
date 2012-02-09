@@ -1,5 +1,5 @@
 apps:
-  bostonmusic:
+  music:
     app_id: 20
     page:
       title: Boston Music Hub

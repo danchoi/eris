@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>bostonstuff.org</title>
+    <link href="/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/bootstrap-responsive.min.css" rel="stylesheet"/>
+    <link href="/app.css" rel="stylesheet"/>
+    <link href="/home.css" rel="stylesheet"/>
+  </head>
+  <body>
+
+    <div class="container">
+      <h1 class="titleheader">bostonstuff.org</h1>
+
+      <div id="contentBox" class="row">
+        <div class="span4">
+          <p>
+<a href="/music">bostonstuff.org/music</a>
+          </p>
+        </div>
+
+        <div class="span4">
+
+        </div>
+        <div class="span4">
+
+        </div>
+      </div>
+
+      <div id="footer" class="row">
+        <p>
+          This site is powered by <a href="www.sinatrarb.com/">Sinatra</a>
+          and 
+          <a href="http://documentcloud.github.com/backbone/">Backbone.js</a>.
+          It should update automatically in-place every few minutes.
+          Get the <a href="https://github.com/danchoi/boston-music-planet">source code</a> on GitHub.
+        </p>
+      </div>
+
+    </div>
+  
+    <script type="text/javascript" src="/underscore-min.js"></script>
+    <script type="text/javascript" src="/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="/backbone-min.js"></script>
+    <script type="text/javascript" src="/app.js"></script>
+
+    <script>
+    </script>
+    <!-- Templates -->
+    <script type="text/template" id="update-template">
+      <div class="update">
+          <span class="date">{{ date_string }}</span>
+          <img src="{{ media }}"/>
+          {{ content }}
+      </div>
+    </script>
+
+    <script type="text/template" id="feed-item-template">
+      <div class="feedItem">
+        <span class="date">{{date_string}}</span>
+        <h4>{{feed_title}}</h4>
+        <h3><a href="{{item_href}}">{{title}}</a></h3>
+        {{image_tag}}
+        <p>{{summary}}</p>
+      </div>
+    </script>
+
+    <script type="text/template" id="tweet-template">
+      <div class="tweet">
+        <img src="{{profile_image_url}}"/>
+        <strong>{{ screen_name }}</strong>
+        <p>
+          {{ text }}
+          <br/>
+          <span class="tweet_date">{{ date_string }}</span>
+        </p>
+      </div>
+    </script>
+  </body>
+</html>
