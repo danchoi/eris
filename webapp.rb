@@ -9,7 +9,7 @@ require 'uri'
 CONFIG = YAML::load_file 'config.yml'
 DB = Sequel.connect CONFIG['database']
 
-class BostonRubyists < Sinatra::Base
+class ErisWeb < Sinatra::Base
   set :static, true
   set :root, File.dirname(__FILE__)
 
@@ -52,7 +52,7 @@ class BostonRubyists < Sinatra::Base
   }
 
   MIN_CONTENT_LENGTH = 100
-  get('/') {
+  get('/:app') {|app|
     @twitter_users = DB[:twitter_users].order(:followers_count.desc).to_a
     @tweets = DB[:tweets].order(:created_at.desc).limit(200).map {|t| prep_tweet t}
     @blogs = DB[:blogs].all
@@ -64,14 +64,14 @@ class BostonRubyists < Sinatra::Base
     erb :index 
   }
 
-  get('/blog_posts') {
+  get('/:app/feed_items') {|app|
     @blog_posts = DB[:blog_posts].
       order(:inserted_at.desc).
       filter("length(coalesce(summary, '')) > #{MIN_CONTENT_LENGTH} and date > ?", params[:from_time]).
       map {|p| prep p}
     @blog_posts.to_json
   }
-  get('/tweets') {
+  get('/:app/tweets') {|app|
     ds = DB[:tweets].order(:inserted_at.desc).filter("created_at > ?", params[:from_time])
     @tweets = ds.map {|p| prep_tweet p}
     @tweets.to_json
