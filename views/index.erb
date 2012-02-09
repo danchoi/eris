@@ -66,12 +66,12 @@
       // Set up the "play" buttons for each runnable code example.
       $(function() {
         
-        BlogPosts.reset(<%= @blog_posts.to_json %>);
+        FeedItems.reset(<%= @blog_posts.to_json %>);
         Tweets.reset(<%= @tweets.to_json %>);
 
         setInterval(function () {
        
-          BlogPosts.fetch({add: true});
+          FeedItems.fetch({add: true});
           Tweets.fetch({add: true});
         }, <%= poll_interval %>);
       });
@@ -88,11 +88,11 @@
       </div>
     </script>
 
-    <script type="text/template" id="blogpost-template">
-      <div class="blogpost">
+    <script type="text/template" id="feed-item-template">
+      <div class="feedItem">
         <span class="date">{{date_string}}</span>
         <h4>{{ blog }}</h4>
-        <h3><a href="{{blog_post_href}}">{{ title }}</a></h3>
+        <h3><a href="{{item_href}}">{{title}}</a></h3>
         {{imgtag}}
         <p>{{ summary }}</p>
       </div>

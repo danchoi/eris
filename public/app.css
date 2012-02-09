@@ -21,11 +21,11 @@
   list-style-type: none;
   margin-left:0;
 }
-.blogs li {
+.feedItems li {
   margin-top: 0.5em;
 }
 
-.blogpost { 
+.feedItem { 
   border-top: 1px dotted #ECECEC;
   padding-bottom: 0.3em;
   padding-top: 0.5em;
@@ -63,7 +63,7 @@
   float: left;
   padding-top:5px;
 }
-.blogpost img {
+.feedItem img {
   float: right;
   max-width: 150px;
   margin-left: 4px;

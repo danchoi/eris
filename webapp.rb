@@ -21,7 +21,7 @@ class BostonRubyists < Sinatra::Base
         p[:content] = p[:content].sub(/\w+ \d+, \d{4}/, '')
       end
       if p.has_key?(:img)
-        p[:imgtag] = p[:img] ? %Q[<a href="#{p[:blog_post_href]}"><img class="blog-post-image" src="#{p[:img]}"/></a>] : nil
+        p[:imgtag] = p[:img] ? %Q[<a href="#{p[:item_href]}"><img class="feed-item-image" src="#{p[:img]}"/></a>] : nil
       end
       p
     end

@@ -2,19 +2,19 @@
 $(function() {
   _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
 
-  window.BlogPost = Backbone.Model.extend({ idAttribute: 'href' });
-  window.BlogPostsList = Backbone.Collection.extend({
+  window.FeedItem = Backbone.Model.extend({ idAttribute: 'href' });
+  window.FeedItemsList = Backbone.Collection.extend({
     url: function() {
-      return ('/blog_posts?from_time=' + this.models[this.models.length-1].get("date"));
+      return ('/items?from_time=' + this.models[this.models.length-1].get("date"));
     },
-    model: BlogPost,
+    model: FeedItem,
     comparator: function(x) { return x.get('date'); }
   });
-  window.BlogPosts = new BlogPostsList();
-  window.BlogPostView = Backbone.View.extend({
+  window.FeedItems = new FeedItemsList();
+  window.FeedItemView = Backbone.View.extend({
     tagName: "div",
-    classNme: "blogpost",
-    template: _.template( $('#blogpost-template').html() ),
+    classNme: "feedItem",
+    template: _.template( $('#feed-item-template').html() ),
     render: function() {
       $(this.el).html(this.template(this.model.toJSON()));
       return this;
@@ -43,24 +43,24 @@ $(function() {
 
   window.AppView = Backbone.View.extend({
     initialize: function() {
-      BlogPosts.bind('add', this.addOneBlogPost, this);
-      BlogPosts.bind('reset', this.addAllBlogPosts, this);
-      BlogPosts.bind('refresh', this.addAllBlogPosts, this);
+      FeedItems.bind('add', this.addOneFeedItem, this);
+      FeedItems.bind('reset', this.addAllFeedItems, this);
+      FeedItems.bind('refresh', this.addAllFeedItems, this);
 
       Tweets.bind('add', this.addOneTweet, this);
       Tweets.bind('reset', this.addAllTweets, this);
       Tweets.bind('refresh', this.addAllTweets, this);
     },
 
-    addOneBlogPost: function(x) {
-      var blogpostView = new BlogPostView({model: x});
-      if ((x.get('blog_post_id') % 2) == 0) {
-        $("#blogposts").prepend(blogpostView.render().el);
+    addOneFeedItem: function(x) {
+      var feedItemView = new FeedItemView({model: x});
+      if ((x.get('item_id') % 2) == 0) {
+        $("#feedItems").prepend(feedItemView.render().el);
       } else {
-        $("#blogposts-column-2").prepend(blogpostView.render().el);
+        $("#feedItems-column-2").prepend(feedItemView.render().el);
       }
     },
-    addAllBlogPosts: function() { BlogPosts.each(this.addOneBlogPost); },
+    addAllFeedItems: function() { FeedItems.each(this.addOneFeedItem); },
 
     addOneTweet: function(x) {
       var tweetView = new TweetView({model: x});
