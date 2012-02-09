@@ -24,9 +24,7 @@ $(function() {
 
   window.Tweet = Backbone.Model.extend({ idAttribute: 'href' });
   window.TweetsList = Backbone.Collection.extend({
-    url: function() {
-      return ('/tweets?from_time=' + this.models[this.models.length-1].get("created_at"));
-    },
+    url: function() { return ; },
     model: Tweet,
     comparator: function(x) { return x.get('created_at'); }
   });

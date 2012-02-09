@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= page_title %></title>
+    <title><%= app_config['page']['title'] %></title>
     <link href="/bootstrap.min.css" rel="stylesheet"/>
     <link href="/bootstrap-responsive.min.css" rel="stylesheet"/>
     <link href="/app.css" rel="stylesheet"/>
@@ -10,8 +10,8 @@
   <body>
 
     <div class="container">
-      <a id="bostonrblink" href="<%=org['href']%>"><%=org['name']%></a>
-      <h1 class="titleheader"><%= page_title %></h1>
+      <a id="bostonrblink" href="<%=app_config['org']['href']%>"><%= app_config['org']['name']%></a>
+      <h1 class="titleheader"><%= app_config['page']['title'] %></h1>
 
       <p>
         This site is powered by <a href="www.sinatrarb.com/">Sinatra</a>
@@ -24,21 +24,9 @@
       <div class="row">
         <div class="span2 leftBar">
           <ul class="twitter-users">
-            <% @twitter_users.each do |h| %>
-            <li>
-              <img src="<%=h[:profile_image_url]%>"/>
-              <a 
-                title="<%= h[:followers_count] %> followers"
-                href="https://twitter.com/<%=h[:screen_name]%>"><%=h[:screen_name]%></a>
-              <br><span class="location"><%= h[:location] %></span>
-            </li>
-          <% end %>
           </ul>
           <h3>blogs</h3>
           <ul class="blogs">
-          <%@blogs.each do |blog|%>
-            <li><a href="<%=blog[:blog_html_url]%>"><%=blog[:title]%></a></li>
-          <%end%>
           </ul>
         </div>
         <div class="span2">
@@ -61,12 +49,15 @@
 
     <script>
       $(function() {
-        FeedItems.reset(<%= @blog_posts.to_json %>);
+        // FeedItems.reset(<%= @feed_items.to_json %>);
         Tweets.reset(<%= @tweets.to_json %>);
+        Tweets.url = function() {
+          return ('/<%= @app %>/tweets?from_time=' + this.models[this.models.length-1].get("created_at"));
+        };
         setInterval(function () {
-          FeedItems.fetch({add: true});
+          // FeedItems.fetch({add: true});
           Tweets.fetch({add: true});
-        }, <%= poll_interval %>);
+        }, <%= app_config['poll_interval'] * 1000 %>);
       });
     </script>
     <!-- Templates -->
@@ -81,17 +72,17 @@
     <script type="text/template" id="feed-item-template">
       <div class="feedItem">
         <span class="date">{{date_string}}</span>
-        <h4>{{ blog }}</h4>
+        <h4>{{ feed_title}}</h4>
         <h3><a href="{{item_href}}">{{title}}</a></h3>
-        {{imgtag}}
+        {{image_file}}
         <p>{{ summary }}</p>
       </div>
     </script>
 
     <script type="text/template" id="tweet-template">
       <div class="tweet">
-        <img src="{{user_profile_image_url}}"/>
-        <strong>{{ user_screen_name }}</strong>
+        <img src=""/>
+        <strong>{{ screen_name }}</strong>
         <p>
           {{ text }}
           <br/>
@@ -101,4 +92,3 @@
     </script>
   </body>
 </html>
-

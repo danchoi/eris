@@ -1,6 +1,8 @@
 apps:
   bostonmusic:
     app_id: 20
+    page:
+      title: Boston Music Hub
     org: 
       name: exploitboston.com
       href: http://exploitboston.com
