@@ -48,9 +48,10 @@ class ErisWeb < Sinatra::Base
     end
 
     def app_config
+      return unless @app
       a = CONFIG['apps'][@app].dup
       s = request.env['SERVER_NAME'] 
-      if @app == 'music' && s !~ /bostonmusichub/
+      if s !~ /bostonmusichub/ && @app == 'music'
         a['page']['title'] = 'boston music'
         a['org']['name'] = 'bostonstuff.org'
         a['org']['href'] = 'http://bostonstuff.org'
