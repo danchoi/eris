@@ -20,12 +20,13 @@ $(function() {
   });
 
 
-  window.Tweet = Backbone.Model.extend({ idAttribute: 'tweet_id' });
+  window.Tweet = Backbone.Model.extend({ });
   window.TweetsList = Backbone.Collection.extend({
     url: function() { return ; },
     model: Tweet,
     comparator: function(x) { return x.get('created_at'); }
   });
+
   window.Tweets = new TweetsList();
   window.TweetView = Backbone.View.extend({
     tagName: "div",
