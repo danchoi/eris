@@ -15,8 +15,12 @@
 
 
       <div id="toplinks">
-        <% apps.select {|a| a != @app}.each {|app| %>
+        <% apps.each {|app| %>
+          <% if app == @app %>
+          <%= app %>
+          <% else %>
           <a href="/<%=app%>"><%= app %></a>
+          <% end %>
           &middot;
         <% } %>
         <a href="<%=app_config['org']['href']%>"><%= app_config['org']['name']%></a>
