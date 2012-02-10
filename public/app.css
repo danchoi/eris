@@ -55,8 +55,9 @@
   clear:left; 
 }
 .leftBar h3 { clear:left }
-#bostonrblink {
+#toplinks {
   margin-top: 1em;
+  text-align:right;
   float:right;
 }
 .location {

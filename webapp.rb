@@ -43,6 +43,10 @@ class ErisWeb < Sinatra::Base
       t
     end
 
+    def apps 
+      a = CONFIG['apps'].keys
+    end
+
     def app_config
       a = CONFIG['apps'][@app]
       s = request.env['SERVER_NAME'] 
