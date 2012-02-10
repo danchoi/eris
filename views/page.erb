@@ -21,7 +21,11 @@
         <% } %>
         <a href="<%=app_config['org']['href']%>"><%= app_config['org']['name']%></a>
       </div>
-      <h1 class="titleheader"><%= app_config['page']['title'] %></h1>
+
+      <h1 class="titleheader">
+        <%= request.env['SERVER_NAME'] =~ /bostonmusichub/ ?  'Boston Music Hub' : app_config['page']['title'] %>
+      </h1>
+
       <p>
         This page should update automatically in-place every few minutes.
       </p>
