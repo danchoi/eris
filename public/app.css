@@ -44,7 +44,7 @@
   font-size: smaller;
 }
   .tweet p { 
-    margin-bottom: 2px;
+    margin-bottom: 5px;
   }
   .tweet img {
     padding-top:5px;
@@ -67,7 +67,11 @@
 .tweet_date {
   color: #CCC;
   font-size: smaller;
+  float: right;
 }
+  .tweet_date a {
+    color: #CCC;
+  }
 .tweet img {
   float: left;
   padding-top:5px;
