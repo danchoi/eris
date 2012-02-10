@@ -44,7 +44,14 @@ class ErisWeb < Sinatra::Base
     end
 
     def app_config
-      CONFIG['apps'][@app]
+      a = CONFIG['apps'][@app]
+      s = request.env['SERVER_NAME'] 
+      if @app == 'music' && s !~ /bostonmusichub/
+        a['page']['title'] = 'boston music'
+        a['org']['name'] = 'bostonstuff.org'
+        a['org']['href'] = 'http://bostonstuff.org'
+      end
+      a
     end
 
     def tweet_service_url
