@@ -50,7 +50,9 @@ $(function() {
 
     addOneFeedItem: function(x) {
       var feedItemView = new FeedItemView({model: x});
-      if ((x.get('item_id') % 2) == 0) {
+      var countCol1 =  $("#feedItems").children().length;
+      var countCol2 =  $("#feedItems-column-2").children().length;
+      if (countCol1 < countCol2) {
         $("#feedItems").prepend(feedItemView.render().el);
       } else {
         $("#feedItems-column-2").prepend(feedItemView.render().el);
